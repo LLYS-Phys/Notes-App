@@ -11,7 +11,7 @@ window.addEventListener('load', () => {
     })
 
     document.getElementById("save").addEventListener("click", (event) => {
-        if (noteinput.value.length > 1) {
+        if (document.getElementById("noteinput").value.length > 1) {
             let newNote = { id: lastId, text: document.getElementById("noteinput").value };
             let li = document.createElement('li');
             li.className = `note-${newNote.id}`;
@@ -23,7 +23,8 @@ window.addEventListener('load', () => {
             selectedNote = newNote;
             isNewNote = false;
             lastId++;
-            noteinput.focus();
+            document.getElementById("noteinput").focus();
+            reset()
         }
     });
 
@@ -56,11 +57,22 @@ window.addEventListener('load', () => {
         showSidebar ? container.classList.add('active') : container.classList.remove('active');
     });
 
+    document.getElementById("search").addEventListener("input", () => {
+        for (let i=0; i<notes.length; i++){
+            if (notes[i].text.includes(document.getElementById("search").value) || document.getElementById("search").value == ""){
+                document.getElementsByClassName("note-" + notes[i].id)[0].classList.remove("hidden")
+            }
+            else{
+                document.getElementsByClassName("note-" + notes[i].id)[0].classList.add("hidden")
+            }
+        }
+    })
+
     function reset() {
         deselectEls();
         selectedNote = null;
         isNewNote = true;
-        noteinput.value = '';
+        document.getElementById("noteinput").value = '';
     }
 
     function deselectEls() {
