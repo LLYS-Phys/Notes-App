@@ -47,6 +47,18 @@
       "notelist";
     transition: .3s all;
     border-right: 1px solid lightgray;
+    overflow-y: scroll;
+    padding-bottom: 2rem;
+}
+/* Hide scrollbar for Chrome, Safari and Opera */
+.container aside::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+.container aside {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
 }
 .container main{
     grid-area: main;
@@ -63,18 +75,27 @@
 }
 ul {
     grid-area: notelist;
+    list-style: none;
+    padding: 1%;
+    display: inherit;
+    align-self: baseline;
 }
 ul li {
-    padding: 20px;
-    border-bottom: 1px solid var(--color-border);
+    padding: 1rem;
+    border-bottom: 1px solid lightgray;
     transition: .3s all;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    height: fit-content;
 }
 ul li:hover {
     cursor: pointer;
-    background-color: var(--color-border);
+    background-color: rgb(240, 240, 240);
 }
 .selected {
-    background-color: white;
+    background-color: rgb(240, 240, 240);
     margin-right: -1px;
 }
 #toggle {

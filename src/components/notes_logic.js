@@ -4,16 +4,15 @@ let isNewNote = true;
 let lastId = 0;
 let showSidebar = true;
 
-window.addEventListener('load', event => {
+window.addEventListener('load', () => {
     document.getElementById("add").addEventListener("click", () => {
-        console.log('test')
         reset();
-        noteinput.focus();
+        document.getElementById("noteinput").focus();
     })
 
     document.getElementById("save").addEventListener("click", (event) => {
         if (noteinput.value.length > 1) {
-            let newNote = { id: lastId, text: noteinput.value };
+            let newNote = { id: lastId, text: document.getElementById("noteinput").value };
             let li = document.createElement('li');
             li.className = `note-${newNote.id}`;
             deselectEls();
@@ -46,8 +45,8 @@ window.addEventListener('load', event => {
             selectedNote = notes.filter(note => note.id === +index)[0];
             deselectEls();
             event.target.classList.add('selected');
-            noteinput.value = selectedNote.text;
-            noteinput.focus();
+            document.getElementById("noteinput").value = selectedNote.text;
+            document.getElementById("noteinput").focus();
         }
     })
 
@@ -67,7 +66,9 @@ window.addEventListener('load', event => {
     function deselectEls() {
         if (selectedNote) {
             let selectedElem = document.getElementsByClassName('selected')[0];
-            selectedElem.classList.remove('selected');
+            if (selectedElem){
+                selectedElem.classList.remove('selected');
+            }
         }
     }
 })
