@@ -13,11 +13,13 @@ window.addEventListener('load', () => {
     const deleteBtn = document.getElementById("delete")
     const noteList = document.getElementById("notelist")
     const noteInput = document.getElementById("noteinput")
+    const noteName = document.getElementById("notename")
     const toggle = document.getElementById("toggle")
     const header = document.getElementsByClassName('header')[0]
     const search = document.getElementById("search")
     const seachNoResults = document.getElementById("no-results")
     const mobileInfoScreen = document.getElementById("mobile-info")
+    const timestamp = document.getElementById("timestamp")
 
     if (window.matchMedia("(max-width: 1000px)").matches){
         container.classList.remove("active")
@@ -28,6 +30,13 @@ window.addEventListener('load', () => {
         })
     }
     noteInput.addEventListener("click", () => {
+        if (showSidebar && window.matchMedia("(max-width: 1000px)").matches){  
+            container.classList.remove("active")
+            showSidebar = false
+        }
+    })
+
+    noteName.addEventListener("click", () => {
         if (showSidebar && window.matchMedia("(max-width: 1000px)").matches){  
             container.classList.remove("active")
             showSidebar = false
@@ -71,7 +80,7 @@ window.addEventListener('load', () => {
 
     addBtn.addEventListener("click", () => {
         reset();
-        noteInput.focus();
+        noteName.focus();
     })
 
     saveBtn.addEventListener("click", () => {
@@ -79,6 +88,18 @@ window.addEventListener('load', () => {
     });
 
     noteInput.addEventListener("keydown", (event) => {
+        if (event.keyCode == 13) {
+            if (event.shiftKey){
+                pasteIntoInput(this, "\n");
+            }
+            else{
+                save()
+                event.preventDefault()
+            }
+        }
+    })
+
+    noteName.addEventListener("keydown", (event) => {
         if (event.keyCode == 13) {
             if (event.shiftKey){
                 pasteIntoInput(this, "\n");
@@ -125,7 +146,9 @@ window.addEventListener('load', () => {
             deselectEls();
             event.target.classList.add('selected');
             noteInput.value = selectedNote.text;
-            noteInput.focus();
+            noteName.value = selectedNote.title;
+            timestamp.innerText = selectedNote.timestamp;
+            noteName.focus();
             saveBtn.disabled = false
             saveBtn.classList.remove("Mui-disabled")
             addBtn.disabled = false
@@ -145,7 +168,7 @@ window.addEventListener('load', () => {
     search.addEventListener("input", () => {
         let countHidden = 0
         for (let i=0; i<notes.length; i++){
-            if (notes[i].text.includes(search.value) || search.value == ""){
+            if (notes[i].text.includes(search.value) || notes[i].title.includes(search.value) || search.value == ""){
                 document.getElementsByClassName("note-" + notes[i].id)[0].classList.remove("hidden")
             }
             else{
@@ -166,6 +189,8 @@ window.addEventListener('load', () => {
         selectedNote = null;
         isNewNote = true;
         noteInput.value = '';
+        noteName.value = '';
+        timestamp.textContent = '';
         saveBtn.disabled = true
         saveBtn.classList.add("Mui-disabled")
         addBtn.disabled = true
@@ -184,32 +209,37 @@ window.addEventListener('load', () => {
     }
 
     function save() {
-        if (noteInput.value.length > 1) {
+        if (noteInput.value.length > 1 && noteName.value.length > 1) {
             mobileInfoScreen.classList.add("active")
             setTimeout(() => {
                 mobileInfoScreen.classList.remove("active")
             }, 1000);
-            let newNote = { id: lastId, text: noteInput.value };
+            let now = new Date()
+            let newNote = { id: lastId, text: noteInput.value, title: noteName.value, timestamp: now.toString() };
             let li
             if (selectedNote == null){
                 li = document.createElement('li');
                 li.className = `note-${newNote.id}`;
+                li.setAttribute("uniqueId", lastId)
                 lastId++;
-                noteList.appendChild(li);
+                noteList.prepend(li);
                 notes.push(newNote);
             }
             else{
                 li = document.getElementsByClassName('selected')[0]
-                let liIndex = notes.findIndex(note => note.text == li.textContent)
+                let liIndex = notes.findIndex(note => note.id == li.attributes.uniqueId.value)
+                notes[liIndex].title = newNote.title
                 notes[liIndex].text = newNote.text
             }
             deselectEls();
             li.classList.add('selected');
-            li.innerHTML = newNote.text;
+            li.innerHTML = newNote.title;
             selectedNote = newNote;
             isNewNote = false;
-            noteInput.focus();
+            noteName.focus();
             reset()
+
+            console.log(notes)
         }
     }
 })
