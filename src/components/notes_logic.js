@@ -21,28 +21,19 @@ window.addEventListener('load', () => {
     const mobileInfoScreen = document.getElementById("mobile-info")
     const timestamp = document.getElementById("timestamp")
 
-    if (window.matchMedia("(max-width: 1000px)").matches){
-        hideSidebar()
-        noteList.addEventListener("click", hideSidebar)
-    }
-    noteInput.addEventListener("click", () => {
-        if (showSidebar && window.matchMedia("(max-width: 1000px)").matches){  
-            hideSidebar()
-        }
-    })
-    noteName.addEventListener("click", () => {
-        if (showSidebar && window.matchMedia("(max-width: 1000px)").matches){  
-            hideSidebar()
-        }
-    })
+    if (window.matchMedia("(max-width: 1000px)").matches) ( sidebarHide(), noteList.addEventListener("click", sidebarHide) )
+
+    noteInput.addEventListener("click", () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() })
+    noteInput.addEventListener("input", checkInputs)
+    noteInput.addEventListener("keydown", (event) => { enterEvents(event) })
+
+    noteName.addEventListener("click", () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() })
+    noteName.addEventListener("input", checkInputs)
+    noteName.addEventListener("keydown", (event) => { enterEvents(event) })
         
     function checkDirection() {
-        if (touchendX < touchstartX){
-            hideSidebar()
-        } 
-        if (touchendX > touchstartX) {
-            showSidebar()
-        }
+        if (touchendX < touchstartX) sidebarHide()
+        if (touchendX > touchstartX) sidebarShow()
     }
     document.addEventListener('touchstart', e => {
         touchstartX = e.changedTouches[0].screenX
@@ -52,19 +43,8 @@ window.addEventListener('load', () => {
         checkDirection()
     })
 
-    noteInput.addEventListener("input", checkInputs)
-    noteName.addEventListener("input", checkInputs)
-
-    addBtn.addEventListener("click", () => {
-        reset()
-        noteName.focus()
-    })
-
+    addBtn.addEventListener("click", () => { ( reset(), noteName.focus() )})
     saveBtn.addEventListener("click", save)
-
-    noteInput.addEventListener("keydown", (event) => { enterEvents(event) })
-    noteName.addEventListener("keydown", (event) => { enterEvents(event) })
-
     deleteBtn.addEventListener("click", (event) => {
         if (selectedNote) {
             notes.splice(notes.indexOf(selectedNote), 1)
@@ -79,7 +59,7 @@ window.addEventListener('load', () => {
             let li = event.target
             let index = li.className[li.className.length - 1]
             selectedNote = notes.filter(note => note.id === +index)[0]
-            deselectEls()
+            deselectNotes()
             event.target.classList.add('selected')
             noteInput.value = selectedNote.text
             noteName.value = selectedNote.title
@@ -110,16 +90,11 @@ window.addEventListener('load', () => {
                 countHidden += 1
             }
         }
-        if (search.value != "" && countHidden == document.getElementsByTagName("li").length){
-            seachNoResults.style.display = "block"
-        }
-        else{
-            seachNoResults.style.display = "none"
-        }
+        search.value != "" && countHidden == document.getElementsByTagName("li").length ? seachNoResults.style.display = "block" : seachNoResults.style.display = "none"
     })
 
     function reset() {
-        deselectEls()
+        deselectNotes()
         selectedNote = null
         isNewNote = true
         noteInput.value = ''
@@ -131,21 +106,17 @@ window.addEventListener('load', () => {
         timestamp.classList.remove("active")
     }
 
-    function deselectEls() {
+    function deselectNotes() {
         if (selectedNote) {
             let selectedElem = document.getElementsByClassName('selected')[0]
-            if (selectedElem){
-                selectedElem.classList.remove('selected')
-            }
+            if (selectedElem) selectedElem.classList.remove('selected')
         }
     }
 
     function save() {
         if (noteInput.value.length > 0 && noteName.value.length > 0) {
             mobileInfoScreen.classList.add("active")
-            setTimeout(() => {
-                mobileInfoScreen.classList.remove("active")
-            }, 1000)
+            setTimeout(() => { mobileInfoScreen.classList.remove("active") }, 1000)
             let now = new Date()
             let date = now.getDate().toString() + "/" + now.getMonth().toString() + "/" + now.getFullYear().toString() + " " + now.getHours().toString() + ":" + now.getMinutes().toString() 
             let newNote = { id: lastId, text: noteInput.value, title: noteName.value, timestamp: date }
@@ -164,7 +135,7 @@ window.addEventListener('load', () => {
                 notes[liIndex].title = newNote.title
                 notes[liIndex].text = newNote.text
             }
-            deselectEls()
+            deselectNotes()
             li.classList.add('selected')
             li.innerHTML = newNote.title
             selectedNote = newNote
@@ -175,49 +146,25 @@ window.addEventListener('load', () => {
     }
 
     function checkInputs(){
-        if (noteInput.value == "" || noteName.value == ""){
-            disableSaveBtn()
-            disableAddBtn()
-        }
-        else{
-            enableSaveBtn()
-            enableAddBtn()
-        }
+        noteInput.value == "" || noteName.value == "" ? ( disableSaveBtn(), disableAddBtn() ) : ( enableSaveBtn(), enableAddBtn() )
     }
 
-    function hideSidebar(){
-        container.classList.remove("active")
-        showSidebar = false
-    }
+    function sidebarHide(){ container.classList.remove("active"), showSidebar = false }
+    function sidebarShow(){ container.classList.add("active"), showSidebar = true }
 
-    function showSidebar(){
-        container.classList.add("active")
-        showSidebar = true
-    }
-
-    function enterEvents(event){
-        if (event.keyCode == 13) {
-            if (event.shiftKey){
-                pasteIntoInput(this, "\n")
-            }
-            else{
-                save()
-                event.preventDefault()
-            }
-        }
-    }
+    function enterEvents(event){ if (event.keyCode == 13) event.shiftKey ? pasteIntoInput(this, "\n") : ( save(), event.preventDefault() ) }
 
     function pasteIntoInput(el, text) {
         if (el != undefined){
             el.focus()
             if (typeof el.selectionStart == "number"
                     && typeof el.selectionEnd == "number") {
-                var val = el.value
-                var selStart = el.selectionStart
+                let val = el.value
+                let selStart = el.selectionStart
                 el.value = val.slice(0, selStart) + text + val.slice(el.selectionEnd)
                 el.selectionEnd = el.selectionStart = selStart + text.length
             } else if (typeof document.selection != "undefined") {
-                var textRange = document.selection.createRange()
+                let textRange = document.selection.createRange()
                 textRange.text = text
                 textRange.collapse(false)
                 textRange.select()
@@ -225,30 +172,12 @@ window.addEventListener('load', () => {
         }
     }
 
-    function enableSaveBtn(){
-        saveBtn.disabled = false
-        saveBtn.classList.remove("Mui-disabled")
-    }
-    function disableSaveBtn(){
-        saveBtn.disabled = true
-        saveBtn.classList.add("Mui-disabled")
-    }
+    function enableSaveBtn(){ saveBtn.disabled = false, saveBtn.classList.remove("Mui-disabled") }
+    function disableSaveBtn(){ saveBtn.disabled = true, saveBtn.classList.add("Mui-disabled") }
 
-    function enableAddBtn(){
-        addBtn.disabled = false
-        addBtn.classList.remove("Mui-disabled")
-    }
-    function disableAddBtn(){
-        addBtn.disabled = true
-        addBtn.classList.add("Mui-disabled")
-    }
+    function enableAddBtn(){ addBtn.disabled = false, addBtn.classList.remove("Mui-disabled") }
+    function disableAddBtn(){ addBtn.disabled = true, addBtn.classList.add("Mui-disabled") }
 
-    function enableDeleteBtn(){
-        deleteBtn.disabled = false
-        deleteBtn.classList.remove("Mui-disabled")
-    }
-    function disableDeleteBtn(){
-        deleteBtn.disabled = true
-        deleteBtn.classList.add("Mui-disabled")
-    }
+    function enableDeleteBtn(){ deleteBtn.disabled = false, deleteBtn.classList.remove("Mui-disabled") }
+    function disableDeleteBtn(){ deleteBtn.disabled = true, deleteBtn.classList.add("Mui-disabled") }
 })
