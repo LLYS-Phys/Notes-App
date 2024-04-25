@@ -112,6 +112,9 @@ ul li:hover {
 #toggle:hover {
     cursor: pointer;
 }
+.noteinput-wrapper{
+    width: auto;
+}
 #noteinput {
     width: -webkit-fill-available;
     height: 80vh;

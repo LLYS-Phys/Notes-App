@@ -41,7 +41,9 @@ function Notes() {
         </aside>
         <main className="main">
             <TextField variant="standard" id="notename" fullWidth placeholder="Note Name"></TextField>
-            <textarea name="noteinput" id="noteinput" cols="50" rows="50" placeholder="Create new note"></textarea>
+            <div id="noteinput-wrapper">
+                <textarea name="noteinput" id="noteinput" cols="50" rows="50" placeholder="Create new note"></textarea>
+            </div>
             <div id="mobile-info">
                 <p>Note saved successfully!</p>
             </div>

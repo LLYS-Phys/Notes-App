@@ -1,48 +1,37 @@
-let notes = []
-let selectedNote = null
-let isNewNote = true
-let lastId = 0
-let showSidebar = true
-let touchstartX = 0
-let touchendX = 0
+/** Declare variables **/
+let notes = [], selectedNote = null, isNewNote = true, lastId = 0, showSidebar = true, touchstartX = 0, touchendX = 0
 
 window.addEventListener('load', () => {
-    const container = document.getElementsByClassName('container')[0]
-    const saveBtn = document.getElementById("save")
-    const addBtn = document.getElementById("add")
-    const deleteBtn = document.getElementById("delete")
-    const noteList = document.getElementById("notelist")
-    const noteInput = document.getElementById("noteinput")
-    const noteName = document.getElementById("notename")
+    /** Declare constants **/
+    const container = document.getElementsByClassName('container')[0], header = document.getElementsByClassName('header')[0]
+    const saveBtn = document.getElementById("save"), addBtn = document.getElementById("add"), deleteBtn = document.getElementById("delete")
+    const noteList = document.getElementById("notelist"), noteInput = document.getElementById("noteinput"), noteName = document.getElementById("notename")
     const toggle = document.getElementById("toggle")
-    const header = document.getElementsByClassName('header')[0]
-    const search = document.getElementById("search")
-    const seachNoResults = document.getElementById("no-results")
+    const search = document.getElementById("search"), seachNoResults = document.getElementById("no-results")
     const mobileInfoScreen = document.getElementById("mobile-info")
     const timestamp = document.getElementById("timestamp")
 
+    /** Hide the sidebar by default on non-desktop devices **/
     if (window.matchMedia("(max-width: 1000px)").matches) ( sidebarHide(), noteList.addEventListener("click", sidebarHide) )
 
+    /** Event listeners for the textarea of the note **/
     noteInput.addEventListener("click", () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() })
     noteInput.addEventListener("input", checkInputs)
-    noteInput.addEventListener("keydown", (event) => { enterEvents(event) })
+    noteInput.addEventListener("keydown", (event) => { if (!window.matchMedia("(max-width: 1000px)").matches) enterEvents(event) })
 
+    /** Event listeners for the title of the note **/
     noteName.addEventListener("click", () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() })
     noteName.addEventListener("input", checkInputs)
-    noteName.addEventListener("keydown", (event) => { enterEvents(event) })
+    noteName.addEventListener("keydown", (event) => { if (!window.matchMedia("(max-width: 1000px)").matches) enterEvents(event) })
         
-    function checkDirection() {
-        if (touchendX < touchstartX) sidebarHide()
-        if (touchendX > touchstartX) sidebarShow()
+    /** Swipe events for the sidebar **/
+    function checkDirection() { 
+        touchendX+25 < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null 
     }
-    document.addEventListener('touchstart', e => {
-        touchstartX = e.changedTouches[0].screenX
-    })
-    document.addEventListener('touchend', e => {
-        touchendX = e.changedTouches[0].screenX
-        checkDirection()
-    })
+    document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX })
+    document.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX, checkDirection() })
 
+    /** Event listeners for the buttons **/
     addBtn.addEventListener("click", () => { ( reset(), noteName.focus() )})
     saveBtn.addEventListener("click", save)
     deleteBtn.addEventListener("click", (event) => {
@@ -53,7 +42,14 @@ window.addEventListener('load', () => {
             reset()
         }
     })
+    toggle.addEventListener("click", (event) => {
+        showSidebar = !showSidebar
+        showSidebar ? container.classList.add('active') : container.classList.remove('active')
+        showSidebar ? header.classList.remove('sidebar-hidden') : header.classList.add("sidebar-hidden")
+        showSidebar ? toggle.setAttribute("title", "Hide Note List") : toggle.setAttribute("title", "Show Note List")
+    })
 
+    /** Event listeners for note selection **/
     noteList.addEventListener("click", (event) => {
         if (event.target.tagName === 'LI') {
             let li = event.target
@@ -72,13 +68,7 @@ window.addEventListener('load', () => {
         }
     })
 
-    toggle.addEventListener("click", (event) => {
-        showSidebar = !showSidebar
-        showSidebar ? container.classList.add('active') : container.classList.remove('active')
-        showSidebar ? header.classList.remove('sidebar-hidden') : header.classList.add("sidebar-hidden")
-        showSidebar ? toggle.setAttribute("title", "Hide Note List") : toggle.setAttribute("title", "Show Note List")
-    })
-
+    /** Event listeners for the search bar **/
     search.addEventListener("input", () => {
         let countHidden = 0
         for (let i=0; i<notes.length; i++){
@@ -93,6 +83,7 @@ window.addEventListener('load', () => {
         search.value != "" && countHidden == document.getElementsByTagName("li").length ? seachNoResults.style.display = "block" : seachNoResults.style.display = "none"
     })
 
+    /** Sets the note to default state (Add new note) **/
     function reset() {
         deselectNotes()
         selectedNote = null
@@ -106,6 +97,7 @@ window.addEventListener('load', () => {
         timestamp.classList.remove("active")
     }
 
+    /** Deselects any selected notes from the list **/
     function deselectNotes() {
         if (selectedNote) {
             let selectedElem = document.getElementsByClassName('selected')[0]
@@ -113,6 +105,7 @@ window.addEventListener('load', () => {
         }
     }
 
+    /** Saves the new note when both the title and the textarea have at least one symbol and return to default state (Add new note) **/
     function save() {
         if (noteInput.value.length > 0 && noteName.value.length > 0) {
             mobileInfoScreen.classList.add("active")
@@ -145,15 +138,18 @@ window.addEventListener('load', () => {
         }
     }
 
+    /** Checks if both the title and the textarea have at least one symbol each and controls whether the add and save buttons are disabled **/
     function checkInputs(){
-        noteInput.value == "" || noteName.value == "" ? ( disableSaveBtn(), disableAddBtn() ) : ( enableSaveBtn(), enableAddBtn() )
+        noteInput.value == "" && noteName.value == "" ? ( disableAddBtn() ) : ( enableAddBtn() )
+        noteInput.value == "" || noteName.value == "" ? ( disableSaveBtn() ) : ( enableSaveBtn() )
     }
 
+    /** Functions to contol if the sidebar is shown or not **/
     function sidebarHide(){ container.classList.remove("active"), showSidebar = false }
     function sidebarShow(){ container.classList.add("active"), showSidebar = true }
 
+    /** Desktop only functions to allow the user to save a new note with an enter click (if they have at least one symbol in both title and textarea fields) and enable adding a new row with shift+enter **/
     function enterEvents(event){ if (event.keyCode == 13) event.shiftKey ? pasteIntoInput(this, "\n") : ( save(), event.preventDefault() ) }
-
     function pasteIntoInput(el, text) {
         if (el != undefined){
             el.focus()
@@ -172,12 +168,11 @@ window.addEventListener('load', () => {
         }
     }
 
+    /** Functions for enabling and disabling the buttons **/
     function enableSaveBtn(){ saveBtn.disabled = false, saveBtn.classList.remove("Mui-disabled") }
     function disableSaveBtn(){ saveBtn.disabled = true, saveBtn.classList.add("Mui-disabled") }
-
     function enableAddBtn(){ addBtn.disabled = false, addBtn.classList.remove("Mui-disabled") }
     function disableAddBtn(){ addBtn.disabled = true, addBtn.classList.add("Mui-disabled") }
-
     function enableDeleteBtn(){ deleteBtn.disabled = false, deleteBtn.classList.remove("Mui-disabled") }
     function disableDeleteBtn(){ deleteBtn.disabled = true, deleteBtn.classList.add("Mui-disabled") }
 })
