@@ -1,8 +1,15 @@
-# React + Vite
+# Notes App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple notes app constructed using React and Vite. Please note that only frontend functionalities are implemented.
+This app allows you to:
+- Create Notes
+- Delete Notes
+- Search for notes by their name or their content
 
-Currently, two official plugins are available:
+Notes consist of:
+- Title
+- Text inside the note
+- Automatically generated timestamp when save event is triggered (the format of the timestamp is dd/mm/yyyy hh:mm)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+You can browse through notes in the sidebar on the left which visibility can be toggled. Notes are recorded in reverse chronological order (the newest notes are on top of the list).
+Functinality buttons on the page are disabled and enabled depending on the user interaction, so that only the buttons that can perform an action in the given moment are active.
