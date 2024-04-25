@@ -155,6 +155,7 @@ window.addEventListener('load', () => {
             addBtn.classList.remove("Mui-disabled")
             deleteBtn.disabled = false
             deleteBtn.classList.remove("Mui-disabled")
+            timestamp.classList.add("active")
         }
     })
 
@@ -197,6 +198,7 @@ window.addEventListener('load', () => {
         addBtn.classList.add("Mui-disabled")
         deleteBtn.disabled = true
         deleteBtn.classList.add("Mui-disabled")
+        timestamp.classList.remove("active")
     }
 
     function deselectEls() {
@@ -215,7 +217,8 @@ window.addEventListener('load', () => {
                 mobileInfoScreen.classList.remove("active")
             }, 1000);
             let now = new Date()
-            let newNote = { id: lastId, text: noteInput.value, title: noteName.value, timestamp: now.toString() };
+            let date = now.getDate().toString() + "/" + now.getMonth().toString() + "/" + now.getFullYear().toString() + " " + now.getHours().toString() + ":" + now.getMinutes().toString() 
+            let newNote = { id: lastId, text: noteInput.value, title: noteName.value, timestamp: date };
             let li
             if (selectedNote == null){
                 li = document.createElement('li');
@@ -238,8 +241,6 @@ window.addEventListener('load', () => {
             isNewNote = false;
             noteName.focus();
             reset()
-
-            console.log(notes)
         }
     }
 })

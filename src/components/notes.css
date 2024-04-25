@@ -142,6 +142,10 @@ ul li:hover {
     padding: 0.325rem;
     opacity: 0.9;
     color: black;
+    display: none;
+}
+#timestamp.active{
+    display: block;
 }
 #menu-mobile{
     display: none;
