@@ -11,5 +11,6 @@ Notes consist of:
 - Text inside the note
 - Automatically generated timestamp when save event is triggered (the format of the timestamp is dd/mm/yyyy hh:mm)
 
+Additional Information:
 - You can browse through notes in the sidebar on the left which visibility can be toggled. Notes are recorded in reverse chronological order (the newest notes are on top of the list).
 - Functinality buttons on the page are disabled and enabled depending on the user interaction, so that only the buttons that can perform an action in the given moment are active.
