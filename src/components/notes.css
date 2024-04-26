@@ -181,6 +181,12 @@ ul li:hover {
         opacity: 1;
         transition: opacity 0.2s;
     }
+    .header{
+        height: 8vh;
+    }
+    #noteinput{
+        height: 75vh
+    }
 }
 @media screen and (max-width: 500px){
     .header{
