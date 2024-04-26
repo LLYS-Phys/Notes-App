@@ -9,7 +9,7 @@ import { useRef } from "react";
 
 function Notes() {
     /** Declare variables **/
-    let notes = [], selectedNote = null, lastId = 0, showSidebar = true, touchstartX = 0, touchendX = 0
+    let notes = [], selectedNote = null, lastId = 0, showSidebar = window.matchMedia("(max-width: 1000px)").matches ? false : true, touchstartX = 0, touchendX = 0
 
     /** Declare constants **/
     const container = useRef(null), header = useRef(null)
@@ -20,26 +20,15 @@ function Notes() {
     const mobileInfoScreen = useRef(null)
     const timestamp = useRef(null)
 
-    /** Disable the buttons by default on load **/
-    window.addEventListener('load', () => { 
-        if (addBtn.current != null && saveBtn.current != null && deleteBtn.current != null){
-            addBtn.current.classList.add("Mui-disabled")
-            saveBtn.current.classList.add("Mui-disabled")
-            deleteBtn.current.classList.add("Mui-disabled")
-        }
-    })
-
     /** Mobile only function to close the sidebar on click outside of it **/
     function handleNoteClick(){ if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
 
     /** Swipe events for the sidebar **/
-    function checkDirection() { 
-        touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null 
-    }
+    function checkDirection() { touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null }
     document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX })
     document.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX, checkDirection() })
 
-    /** Note input events - checks if both the title and the textarea have at least one symbol each and controls whether the add and save buttons are disabled **/
+    /** Note input events handling - checks if both the title and the textarea have at least one symbol each and controls whether the add and save buttons are disabled **/
     function handleNoteInput(){
         noteInput.current.value == "" && noteName.current.value == "" ? disableAddBtn() : enableAddBtn()
         noteInput.current.value == "" || noteName.current.value == "" ? disableSaveBtn() : enableSaveBtn()
@@ -56,6 +45,8 @@ function Notes() {
             reset()
         }
     }
+
+    /** Toggle event handling **/
     function handleToggle(){
         showSidebar = !showSidebar
         showSidebar ? container.current.classList.add('active') : container.current.classList.remove('active')
@@ -63,7 +54,7 @@ function Notes() {
         showSidebar ? toggle.current.setAttribute("title", "Hide Note List") : toggle.current.setAttribute("title", "Show Note List")
     }
 
-    /** Handles note selection **/
+    /** Note selection event handling **/
     function handleSelect(event){
         if (window.matchMedia("(max-width: 1000px)").matches) sidebarHide()
 
@@ -84,7 +75,7 @@ function Notes() {
         }
     }
 
-    /** Handles search - the searchbar looks for matches both in the title and the content of the note **/
+    /** Search event handling - the searchbar looks for matches both in the title and the content of the note **/
     function handleSearch(){
         let countHidden = 0
         for (let i=0; i<notes.length; i++){
@@ -205,6 +196,7 @@ function Notes() {
                     variant="outlined" 
                     id="add" 
                     title="Add new note" 
+                    className="Mui-disabled"
                     disabled={noteInput.value == "" && noteName.value == ""} 
                     ref={addBtn} 
                     onClick={handleAdd}>
@@ -217,6 +209,7 @@ function Notes() {
                     variant="outlined" 
                     id="delete" 
                     title="Delete note" 
+                    className="Mui-disabled"
                     disabled={selectedNote} 
                     ref={deleteBtn} 
                     onClick={handleDelete}>
@@ -226,6 +219,7 @@ function Notes() {
                     variant="outlined" 
                     id="save" 
                     title="Save note" 
+                    className="Mui-disabled"
                     disabled={noteInput.value == "" || noteName.value == ""} 
                     ref={saveBtn} 
                     onClick={handleSave}>
