@@ -9,7 +9,7 @@ import { useRef } from "react";
 
 function Notes() {
     /** Declare variables **/
-    let notes = [], selectedNote = null, isNewNote = true, lastId = 0, showSidebar = true, touchstartX = 0, touchendX = 0
+    let notes = [], selectedNote = null, lastId = 0, showSidebar = true, touchstartX = 0, touchendX = 0
 
     /** Declare constants **/
     const container = useRef(null), header = useRef(null)
@@ -60,7 +60,8 @@ function Notes() {
     /** Handles note selection **/
     function handleSelect(event){
         if (window.matchMedia("(max-width: 1000px)").matches) sidebarHide()
-        if (event.target.tagName === 'LI') {
+
+        if (event.target.tagName === 'LI' && !event.target.classList.contains("selected")) {
             let li = event.target
             let index = li.className[li.className.length - 1]
             selectedNote = notes.filter(note => note.id === +index)[0]
