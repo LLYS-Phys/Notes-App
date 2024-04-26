@@ -23,9 +23,11 @@ function Notes() {
     /** Hide the sidebar by default on non-desktop devices **/
     window.addEventListener('load', () => { 
         if (window.matchMedia("(max-width: 1000px)").matches && noteList.current != null) ( sidebarHide(), noteList.current.addEventListener("click", sidebarHide) ) 
-        addBtn.current.classList.add("Mui-disabled")
-        saveBtn.current.classList.add("Mui-disabled")
-        deleteBtn.current.classList.add("Mui-disabled")
+        if (addBtn.current != null && saveBtn.current != null && deleteBtn.current != null){
+            addBtn.current.classList.add("Mui-disabled")
+            saveBtn.current.classList.add("Mui-disabled")
+            deleteBtn.current.classList.add("Mui-disabled")
+        }
     })
 
     /** Mobile only function to close the sidebar on click outside of it **/
@@ -33,7 +35,7 @@ function Notes() {
 
     /** Swipe events for the sidebar **/
     function checkDirection() { 
-        touchendX+25 < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null 
+        touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null 
     }
     document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX })
     document.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX, checkDirection() })
@@ -46,7 +48,7 @@ function Notes() {
 
     /** Button event handling **/
     function handleSave(){ save() }
-    function handleAdd(){ reset(), noteName.current.focus() }
+    function handleAdd(){ reset(), focusOnName() }
     function handleDelete(){
         if (selectedNote) {
             notes.splice(notes.indexOf(selectedNote), 1)
@@ -75,11 +77,11 @@ function Notes() {
             noteInput.current.value = selectedNote.text
             noteName.current.value = selectedNote.title
             timestamp.current.innerText = selectedNote.timestamp
-            noteName.current.focus()
+            timestamp.current.classList.add("active")
+            focusOnName()
             enableSaveBtn()
             enableAddBtn()
             enableDeleteBtn()
-            timestamp.current.classList.add("active")
         }
     }
 
@@ -123,7 +125,7 @@ function Notes() {
             }
             deselectNotes()
             li.innerHTML = newNote.title
-            noteName.current.focus()
+            focusOnName()
             reset()
         }
     }
@@ -143,10 +145,10 @@ function Notes() {
         noteInput.current.value = ''
         noteName.current.value = ''
         timestamp.current.textContent = ''
+        timestamp.current.classList.remove("active")
         disableSaveBtn()
         disableAddBtn()
         disableDeleteBtn()
-        timestamp.current.classList.remove("active")
     }
 
     /** Functions to contol if the sidebar is shown or not **/
@@ -171,6 +173,11 @@ function Notes() {
                 textRange.select()
             }
         }
+    }
+
+    /** Focus on the title of the note on desktop devices **/
+    function focusOnName() {
+        if (!window.matchMedia("(max-width: 1000px)").matches) noteName.current.focus()
     }
 
     /** Functions for enabling and disabling the buttons **/

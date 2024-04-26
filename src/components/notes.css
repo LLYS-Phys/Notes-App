@@ -169,7 +169,7 @@ ul li:hover {
     }
     #mobile-info{
         display: flex;
-        position: absolute;
+        position: fixed;
         bottom: 1%;
         justify-content: center;
         width: 100%;
