@@ -4,7 +4,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import MenuIcon from '@mui/icons-material/Menu';
-import './notes.css'
+import './Notes.css'
 import { useRef } from "react";
 
 function Notes() {
