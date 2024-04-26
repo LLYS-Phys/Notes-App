@@ -21,7 +21,12 @@ function Notes() {
     const timestamp = useRef(null)
 
     /** Hide the sidebar by default on non-desktop devices **/
-    window.addEventListener('load', () => { if (window.matchMedia("(max-width: 1000px)").matches && noteList.current != null) ( sidebarHide(), noteList.current.addEventListener("click", sidebarHide) ) })
+    window.addEventListener('load', () => { 
+        if (window.matchMedia("(max-width: 1000px)").matches && noteList.current != null) ( sidebarHide(), noteList.current.addEventListener("click", sidebarHide) ) 
+        addBtn.current.classList.add("Mui-disabled")
+        saveBtn.current.classList.add("Mui-disabled")
+        deleteBtn.current.classList.add("Mui-disabled")
+    })
 
     /** Mobile only function to close the sidebar on click outside of it **/
     function handleNoteClick(){ if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
