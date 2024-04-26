@@ -22,7 +22,7 @@ function Notes() {
 
     /** Hide the sidebar by default on non-desktop devices **/
     window.addEventListener('load', () => { 
-        if (window.matchMedia("(max-width: 1000px)").matches && noteList.current != null) ( sidebarHide(), noteList.current.addEventListener("click", sidebarHide) ) 
+        if (window.matchMedia("(max-width: 1000px)").matches) ( sidebarHide() ) 
         if (addBtn.current != null && saveBtn.current != null && deleteBtn.current != null){
             addBtn.current.classList.add("Mui-disabled")
             saveBtn.current.classList.add("Mui-disabled")
