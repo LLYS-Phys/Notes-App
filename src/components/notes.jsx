@@ -21,7 +21,7 @@ function Notes() {
     const timestamp = useRef(null)
 
     /** Mobile only function to close the sidebar on click outside of it **/
-    function handleNoteClick(){ if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
+    function handleNoteFocus(){ if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
 
     /** Swipe events for the sidebar **/
     function checkDirection() { touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null }
@@ -252,7 +252,7 @@ function Notes() {
                 placeholder="Note Name" 
                 inputRef={noteName} 
                 onInput={handleNoteInput} 
-                onClick={handleNoteClick} 
+                onFocus={handleNoteFocus} 
                 onKeyDown={(event)=>handleEnter(event)}>
             </TextField>
             <div id="noteinput-wrapper">
@@ -264,7 +264,7 @@ function Notes() {
                     placeholder="Create new note" 
                     ref={noteInput} 
                     onInput={handleNoteInput} 
-                    onClick={handleNoteClick} 
+                    onFocus={handleNoteFocus} 
                     onKeyDown={(event)=>handleEnter(event)}>
                 </textarea>
             </div>
