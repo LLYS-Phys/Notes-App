@@ -7,7 +7,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import './Notes.css'
 import { useRef } from "react";
 
-function Notes() {
+const Notes = () => {
     /** Declare variables **/
     let notes = [], selectedNote = null, lastId = 0, showSidebar = window.matchMedia("(max-width: 1000px)").matches ? false : true, touchstartX = 0, touchendX = 0
 
@@ -21,23 +21,23 @@ function Notes() {
     const timestamp = useRef(null)
 
     /** Mobile only function to close the sidebar on click outside of it **/
-    function handleNoteFocus(){ if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
+    const handleNoteFocus = () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
 
     /** Swipe events for the sidebar **/
-    function checkDirection() { touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null }
+    const checkDirection = () => { touchendX+(screen.width/3) < touchstartX ? sidebarHide() : touchendX > touchstartX+(screen.width/3) ? sidebarShow() : null }
     document.addEventListener('touchstart', e => { touchstartX = e.changedTouches[0].screenX })
     document.addEventListener('touchend', e => { touchendX = e.changedTouches[0].screenX, checkDirection() })
 
     /** Note input events handling - checks if both the title and the textarea have at least one symbol each and controls whether the add and save buttons are disabled **/
-    function handleNoteInput(){
+    const handleNoteInput = () => {
         noteInput.current.value == "" && noteName.current.value == "" ? disableAddBtn() : enableAddBtn()
         noteInput.current.value == "" || noteName.current.value == "" ? disableSaveBtn() : enableSaveBtn()
     }
 
     /** Button event handling **/
-    function handleSave(){ save() }
-    function handleAdd(){ reset(), focusOnName() }
-    function handleDelete(){
+    const handleSave = () => { save() }
+    const handleAdd = () => { reset(), focusOnName() }
+    const handleDelete = () => {
         if (selectedNote) {
             notes.splice(notes.indexOf(selectedNote), 1)
             let note = document.getElementsByClassName(`note-${selectedNote.id}`)[0]
@@ -47,7 +47,7 @@ function Notes() {
     }
 
     /** Toggle event handling **/
-    function handleToggle(){
+    const handleToggle = () => {
         showSidebar = !showSidebar
         showSidebar ? container.current.classList.add('active') : container.current.classList.remove('active')
         showSidebar ? header.current.classList.remove('sidebar-hidden') : header.current.classList.add("sidebar-hidden")
@@ -55,7 +55,7 @@ function Notes() {
     }
 
     /** Note selection event handling **/
-    function handleSelect(event){
+    const handleSelect = (event) => {
         if (window.matchMedia("(max-width: 1000px)").matches) sidebarHide()
 
         if (event.target.tagName === 'LI' && !event.target.classList.contains("selected")) {
@@ -76,7 +76,7 @@ function Notes() {
     }
 
     /** Search event handling - the searchbar looks for matches both in the title and the content of the note **/
-    function handleSearch(){
+    const handleSearch = () => {
         let countHidden = 0
         for (let i=0; i<notes.length; i++){
             if (notes[i].text.includes(search.current.value) || notes[i].title.includes(search.current.value) || search.current.value == ""){
@@ -91,7 +91,7 @@ function Notes() {
     }
 
     /** Saves the new note when both the title and the textarea have at least one symbol and return to default state (Add new note) **/
-    function save() {
+    const save = () => {
         if (noteInput.current.value.length > 0 && noteName.current.value.length > 0) {
             mobileInfoScreen.current.classList.add("active")
             setTimeout(() => { mobileInfoScreen.current.classList.remove("active") }, 1000)
@@ -121,7 +121,7 @@ function Notes() {
     }
 
     /** Deselects any selected notes from the list **/
-    function deselectNotes() {
+    const deselectNotes = () => {
         if (selectedNote) {
             let selectedElem = document.getElementsByClassName('selected')[0]
             if (selectedElem) selectedElem.classList.remove('selected')
@@ -129,7 +129,7 @@ function Notes() {
     }
 
     /** Sets the note to default state (Add new note) **/
-    function reset() {
+    const reset = () => {
         deselectNotes()
         selectedNote = null
         noteInput.current.value = ''
@@ -142,13 +142,13 @@ function Notes() {
     }
 
     /** Functions to contol if the sidebar is shown or not **/
-    function sidebarHide(){ if (container.current != undefined) (container.current.classList.remove("active"), showSidebar = false) }
-    function sidebarShow(){ if (container.current != undefined) (container.current.classList.add("active"), showSidebar = true) }
+    const sidebarHide = () => { if (container.current != undefined) (container.current.classList.remove("active"), showSidebar = false) }
+    const sidebarShow = () => { if (container.current != undefined) (container.current.classList.add("active"), showSidebar = true) }
 
     /** Desktop only functions to allow the user to save a new note with an enter click (if they have at least one symbol in both title and textarea fields) and enable adding a new row with shift+enter **/
-    function handleEnter(){ if (!window.matchMedia("(max-width: 1000px)").matches) enterEvents(event) }
-    function enterEvents(event){ if (event.keyCode == 13) event.shiftKey ? pasteIntoInput(this, "\n") : ( save(), event.preventDefault() ) }
-    function pasteIntoInput(el, text) {
+    const handleEnter = () => { if (!window.matchMedia("(max-width: 1000px)").matches) enterEvents(event) }
+    const enterEvents = (event) => { if (event.keyCode == 13) event.shiftKey ? pasteIntoInput(this, "\n") : ( save(), event.preventDefault() ) }
+    const pasteIntoInput = (el, text) => {
         if (el != undefined){
             el.focus()
             if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
@@ -166,17 +166,15 @@ function Notes() {
     }
 
     /** Focus on the title of the note on desktop devices **/
-    function focusOnName() {
-        if (!window.matchMedia("(max-width: 1000px)").matches) noteName.current.focus()
-    }
+    const focusOnName = () => { if (!window.matchMedia("(max-width: 1000px)").matches) noteName.current.focus() }
 
     /** Functions for enabling and disabling the buttons **/
-    function enableSaveBtn(){ saveBtn.current.disabled = false, saveBtn.current.classList.remove("Mui-disabled") }
-    function disableSaveBtn(){ saveBtn.current.disabled = true, saveBtn.current.classList.add("Mui-disabled") }
-    function enableAddBtn(){ addBtn.current.disabled = false, addBtn.current.classList.remove("Mui-disabled") }
-    function disableAddBtn(){ addBtn.current.disabled = true, addBtn.current.classList.add("Mui-disabled") }
-    function enableDeleteBtn(){ deleteBtn.current.disabled = false, deleteBtn.current.classList.remove("Mui-disabled") }
-    function disableDeleteBtn(){ deleteBtn.current.disabled = true, deleteBtn.current.classList.add("Mui-disabled") }
+    const enableSaveBtn = () => { saveBtn.current.disabled = false, saveBtn.current.classList.remove("Mui-disabled") }
+    const disableSaveBtn = () => { saveBtn.current.disabled = true, saveBtn.current.classList.add("Mui-disabled") }
+    const enableAddBtn = () => { addBtn.current.disabled = false, addBtn.current.classList.remove("Mui-disabled") }
+    const disableAddBtn = () => { addBtn.current.disabled = true, addBtn.current.classList.add("Mui-disabled") }
+    const enableDeleteBtn = () => { deleteBtn.current.disabled = false, deleteBtn.current.classList.remove("Mui-disabled") }
+    const disableDeleteBtn = () => { deleteBtn.current.disabled = true, deleteBtn.current.classList.add("Mui-disabled") }
 
   return (
     <>
