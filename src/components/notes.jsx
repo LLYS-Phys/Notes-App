@@ -20,9 +20,8 @@ function Notes() {
     const mobileInfoScreen = useRef(null)
     const timestamp = useRef(null)
 
-    /** Hide the sidebar by default on non-desktop devices **/
+    /** Disable the buttons by default on load **/
     window.addEventListener('load', () => { 
-        if (window.matchMedia("(max-width: 1000px)").matches) ( sidebarHide() ) 
         if (addBtn.current != null && saveBtn.current != null && deleteBtn.current != null){
             addBtn.current.classList.add("Mui-disabled")
             saveBtn.current.classList.add("Mui-disabled")
@@ -190,7 +189,7 @@ function Notes() {
 
   return (
     <>
-      <div className="container active" ref={container}>
+      <div className={"container " + (!window.matchMedia("(max-width: 1000px)").matches ? "active" : "")} ref={container}>
         <header className="header" ref={header}>
             <div>
                 <Button 
