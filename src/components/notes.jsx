@@ -135,7 +135,6 @@ function Notes() {
     function reset() {
         deselectNotes()
         selectedNote = null
-        isNewNote = true
         noteInput.current.value = ''
         noteName.current.value = ''
         timestamp.current.textContent = ''
