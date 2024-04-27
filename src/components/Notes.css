@@ -4,7 +4,7 @@
 .container {
     height: 100vh;
     display: grid;
-    grid-template-columns: 1px 100%;
+    grid-template-columns: 0 100%;
     grid-template-rows: 3.5rem auto;
     grid-template-areas: 
         "aside header"
