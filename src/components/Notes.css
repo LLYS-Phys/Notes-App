@@ -160,13 +160,18 @@ ul li:hover {
 #mobile-info{
     display: none;
 }
-@media screen and (max-width: 1000px) and (orientation: portrait){
+@media screen and (max-width: 1000px) {
     #menu-mobile{
         display: block;
     }
     #arrow-desktop{
         display: none;
     }
+    .container .sidebar-hidden #toggle svg{
+        transform: none;
+    }
+}
+@media screen and (max-width: 700px) and (orientation: portrait){
     #mobile-info{
         display: flex;
         position: fixed;
@@ -181,22 +186,22 @@ ul li:hover {
         opacity: 1;
         transition: opacity 0.2s;
     }
-    .header{
-        height: 8vh;
+    .container:not(.active) .header{
+        justify-content: center !important;
+        padding: 0 !important;
     }
     #noteinput{
         height: 75vh
-    }
-}
-@media screen and (max-width: 500px){
-    .header{
-        justify-content: center !important;
-        padding: 0 !important;
     }
     .header h3{
         display: none;
     }
     .header div{
         display: flex;
+    }
+}
+@media screen and (max-width: 1000px) and (orientation: landscape){
+    .header{
+        height: 12vh;
     }
 }
