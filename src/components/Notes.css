@@ -31,8 +31,9 @@
     position: sticky;
     background-color: white;
 }
-.container header h3{
+.container header h1{
     margin: 0;
+    font-size: 1.17em;
 }
 .container button{
     display: inline-flex;
@@ -190,7 +191,7 @@ ul li:hover {
         bottom: 0;
         padding: 0 !important;
     }
-    .header h3{
+    .header h1{
         display: none;
     }
     .header div{

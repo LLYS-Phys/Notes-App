@@ -203,7 +203,7 @@ const Notes = () => {
                         <AddIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
                 </Button>
             </div>
-            <h3>Notes</h3>
+            <h1>Notes</h1>
             <div className="buttons">
                 <Button 
                     aria-label="Delete Current Note"
