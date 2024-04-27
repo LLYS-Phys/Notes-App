@@ -4,12 +4,12 @@
 .container {
     height: 100vh;
     display: grid;
-    grid-template-columns: 100%;
+    grid-template-columns: 1px 100%;
     grid-template-rows: 3.5rem auto;
     grid-template-areas: 
-      "header"
-      "main";
-    transition: .3s all;
+        "aside header"
+        "aside main";
+    transition: grid-template-columns .3s;
     overflow: hidden;
 }
 .container.active {
@@ -17,7 +17,7 @@
     grid-template-areas: 
       "aside header"
       "aside main";
-    transition: .3s all;
+    transition: grid-template-columns .3s;
 }
 .container header{
     grid-area: header;
@@ -198,14 +198,14 @@ ul li:hover {
     }
     .container {
         grid-template-areas: 
-          "main"
-          "header";
+            "aside main"
+            "aside header";
         grid-template-rows: auto;
     }
     .container.active {
         grid-template-areas: 
-          "aside main"
-          "aside header";
+            "aside main"
+            "aside header";
         grid-template-rows: auto;
     }
     #timestamp{
