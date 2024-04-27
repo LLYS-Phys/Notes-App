@@ -175,7 +175,7 @@ ul li:hover {
     #mobile-info{
         display: flex;
         position: fixed;
-        bottom: 1%;
+        bottom: 8vh;
         justify-content: center;
         width: 100%;
         background-color: lightgreen;
@@ -186,18 +186,36 @@ ul li:hover {
         opacity: 1;
         transition: opacity 0.2s;
     }
-    .container:not(.active) .header{
-        justify-content: center !important;
+    .header{
+        bottom: 0;
         padding: 0 !important;
-    }
-    #noteinput{
-        height: 75vh
     }
     .header h3{
         display: none;
     }
     .header div{
         display: flex;
+    }
+    .container {
+        grid-template-areas: 
+          "main"
+          "header";
+        grid-template-rows: auto;
+    }
+    .container.active {
+        grid-template-areas: 
+          "aside main"
+          "aside header";
+        grid-template-rows: auto;
+    }
+    #timestamp{
+        bottom: 8vh;
+    }
+    .container.active #timestamp{
+        display: none;
+    }
+    #toggle, #add, #save, #delete{
+        width: 25vw;
     }
 }
 @media screen and (max-width: 1000px) and (orientation: landscape){

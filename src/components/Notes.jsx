@@ -1,4 +1,4 @@
-import { Button, TextField, Typography, InputAdornment } from "@mui/material";
+import { Button, TextField, InputAdornment } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
@@ -188,7 +188,7 @@ const Notes = () => {
                     ref={toggle} 
                     onClick={handleToggle}>
                         <ArrowBackIosIcon fontSize="small" id="arrow-desktop" />
-                        <MenuIcon fontSize="small" id="menu-mobile" />
+                        <MenuIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")} id="menu-mobile" />
                 </Button>
                 <Button 
                     variant="outlined" 
@@ -198,7 +198,7 @@ const Notes = () => {
                     disabled={noteInput.value == "" && noteName.value == ""} 
                     ref={addBtn} 
                     onClick={handleAdd}>
-                        <AddIcon fontSize="small"/>
+                        <AddIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
                 </Button>
             </div>
             <h3>Notes</h3>
@@ -211,7 +211,7 @@ const Notes = () => {
                     disabled={selectedNote} 
                     ref={deleteBtn} 
                     onClick={handleDelete}>
-                        <DeleteIcon fontSize="small"/>
+                        <DeleteIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
                 </Button>
                 <Button 
                     variant="outlined" 
@@ -221,7 +221,7 @@ const Notes = () => {
                     disabled={noteInput.value == "" || noteName.value == ""} 
                     ref={saveBtn} 
                     onClick={handleSave}>
-                        <SaveIcon  fontSize="small"/>
+                        <SaveIcon  fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
                 </Button>
             </div>
         </header>
