@@ -182,6 +182,7 @@ const Notes = () => {
         <header className="header" ref={header}>
             <div>
                 <Button 
+                    aria-label="Toggle Sidebar"
                     variant="outlined" 
                     id="toggle" 
                     title="Hide Note List" 
@@ -191,6 +192,7 @@ const Notes = () => {
                         <MenuIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")} id="menu-mobile" />
                 </Button>
                 <Button 
+                    aria-label="Add New Note"
                     variant="outlined" 
                     id="add" 
                     title="Add new note" 
@@ -204,6 +206,7 @@ const Notes = () => {
             <h3>Notes</h3>
             <div className="buttons">
                 <Button 
+                    aria-label="Delete Current Note"
                     variant="outlined" 
                     id="delete" 
                     title="Delete note" 
@@ -214,6 +217,7 @@ const Notes = () => {
                         <DeleteIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
                 </Button>
                 <Button 
+                    aria-label="Save Current Note"
                     variant="outlined" 
                     id="save" 
                     title="Save note" 
