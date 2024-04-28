@@ -2,7 +2,7 @@
     width: 100%;
 }
 .container {
-    height: 100vh;
+    height: 100dvh;
     display: grid;
     grid-template-columns: 0 100%;
     grid-template-rows: 3.5rem auto;
@@ -118,7 +118,7 @@ ul li:hover {
 }
 #noteinput {
     width: -webkit-fill-available;
-    height: 80vh;
+    height: 80dvh;
     padding: 1.25rem;
     border: none;
     background-color: transparent;
@@ -176,7 +176,7 @@ ul li:hover {
     #mobile-info{
         display: flex;
         position: fixed;
-        bottom: 8vh;
+        bottom: 8dvh;
         justify-content: center;
         width: 100%;
         background-color: lightgreen;
@@ -210,7 +210,7 @@ ul li:hover {
         grid-template-rows: auto;
     }
     #timestamp{
-        bottom: 8vh;
+        bottom: 8dvh;
     }
     .container.active #timestamp{
         display: none;
@@ -221,6 +221,6 @@ ul li:hover {
 }
 @media screen and (max-width: 1000px) and (orientation: landscape){
     .header{
-        height: 12vh;
+        height: 12dvh;
     }
 }
