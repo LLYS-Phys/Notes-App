@@ -22,7 +22,7 @@ const Notes = () => {
     const saveBtn = useRef(null), addBtn = useRef(null), deleteBtn = useRef(null)
     const noteList = useRef(null), noteInput = useRef(""), noteName = useRef("")
     const search = useRef(null), seachNoResults = useRef(null)
-    const mobileInfoScreen = useRef(null)
+    const mobileInfoScreen = useRef(null), mobileDeleteScreen = useRef(null)
     const timestamp = useRef(null)
     const [open, setOpen] = useState(false)
 
@@ -64,6 +64,10 @@ const Notes = () => {
                 let note = document.getElementsByClassName(`note-${selectedNote.id}`)[0]
                 note.remove()
                 reset()
+                tempTitle = ""
+                tempText = ""
+                mobileDeleteScreen.current.classList.add("active")
+                setTimeout(() => { mobileDeleteScreen.current.classList.remove("active") }, 1000)
             }
             else {
                 if (tempTarget.tagName === 'LI' && !tempTarget.classList.contains("selected")) {
@@ -77,7 +81,6 @@ const Notes = () => {
                     tempTitle = selectedNote.title
                     timestamp.current.innerText = selectedNote.timestamp
                     timestamp.current.classList.add("active")
-                    focusOnName()
                     enableSaveBtn()
                     enableAddBtn()
                     enableDeleteBtn()
@@ -117,7 +120,6 @@ const Notes = () => {
             tempTitle = selectedNote.title
             timestamp.current.innerText = selectedNote.timestamp
             timestamp.current.classList.add("active")
-            focusOnName()
             enableSaveBtn()
             enableAddBtn()
             enableDeleteBtn()
@@ -322,6 +324,9 @@ const Notes = () => {
             </div>
             <div id="mobile-info" ref={mobileInfoScreen}>
                 <p>Note saved successfully!</p>
+            </div>
+            <div id="mobile-delete" ref={mobileDeleteScreen}>
+                <p>Note deleted successfully!</p>
             </div>
             <div id="timestamp" ref={timestamp}></div>
         </main>

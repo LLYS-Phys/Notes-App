@@ -161,7 +161,7 @@ ul li:hover {
     text-align: center;
     display: none;
 }
-#mobile-info{
+#mobile-info, #mobile-delete{
     display: none;
 }
 @media screen and (max-width: 1000px) {
@@ -176,7 +176,7 @@ ul li:hover {
     }
 }
 @media screen and (max-width: 700px) and (orientation: portrait){
-    #mobile-info{
+    #mobile-info, #mobile-delete{
         display: flex;
         position: fixed;
         bottom: 8vh;
@@ -186,7 +186,7 @@ ul li:hover {
         opacity: 0;
         transition: opacity 0.2s;
     }
-    #mobile-info.active{
+    #mobile-info.active, #mobile-delete.active{
         opacity: 1;
         transition: opacity 0.2s;
     }
