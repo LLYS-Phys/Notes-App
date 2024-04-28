@@ -119,6 +119,8 @@ ul li:hover {
 }
 #noteinput {
     width: -webkit-fill-available;
+    background-color: white;
+    color: black;
     height: 80vh;
     padding: 1.25rem;
     border: none;
@@ -129,7 +131,7 @@ ul li:hover {
 #noteinput:focus {
     outline: none;
     background-color: white;
-    color: #111;
+    color: black;
 }
 #notename{
     width: -webkit-fill-available;
