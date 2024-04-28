@@ -38,6 +38,7 @@ const Notes = () => {
     const handleNoteInput = () => {
         noteInput.current.value == "" && noteName.current.value == "" ? disableAddBtn() : enableAddBtn()
         noteInput.current.value == "" || noteName.current.value == "" ? disableSaveBtn() : enableSaveBtn()
+        noteInput.current.value == tempText && noteName.current.value == tempTitle ? disableSaveBtn() : enableSaveBtn()
     }
 
     /** Button event handling **/
@@ -55,7 +56,6 @@ const Notes = () => {
     /** Handle Close Dialog Events **/
     const handleClose = (value) => {
         let val = value.target.value.split(" ")[1], type = value.target.value.split(" ")[0]
-        console.log(val, type)
         if (val == "false"){ setOpen(false) }
         else{
             if (type == "add"){ (reset(), focusOnName(), tempTitle = "", tempText = "" ) }
@@ -120,7 +120,7 @@ const Notes = () => {
             tempTitle = selectedNote.title
             timestamp.current.innerText = selectedNote.timestamp
             timestamp.current.classList.add("active")
-            enableSaveBtn()
+            disableSaveBtn()
             enableAddBtn()
             enableDeleteBtn()
         }
@@ -167,10 +167,19 @@ const Notes = () => {
                 notes[liIndex].title = newNote.title
                 notes[liIndex].text = newNote.text
             }
-            deselectNotes()
             li.innerHTML = newNote.title
-            focusOnName()
-            reset()
+            noteInput.current.blur()
+            noteName.current.blur()
+            let index = li.className[li.className.length - 1]
+            selectedNote = notes.filter(note => note.id === +index)[0]
+            deselectNotes()
+            li.classList.add('selected')
+            enableDeleteBtn()
+            tempText = noteInput.current.value
+            tempTitle = noteName.current.value
+            disableSaveBtn()
+            timestamp.current.innerText = selectedNote.timestamp
+            timestamp.current.classList.add("active")
         }
     }
 
