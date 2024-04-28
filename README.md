@@ -16,3 +16,4 @@ Additional Information:
 - Functinality buttons on the page are disabled and enabled depending on the user interaction, so that only the buttons that can perform an action in the given moment are active.
 - When both the title and the text of the note have at least 1 symbol, the user can save it by simply pressing "Enter". A new row can be added in the text of the note by the key combination "Shift+Enter".
 - On mobile devices right swipe on the screen toggles the sidebar open and a left swipe toggles it close.
+- In case of unsaved changes when clicking the "Add new note" or browsing through notes, you will be asked if you want to proceed without saving
