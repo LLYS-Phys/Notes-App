@@ -1,16 +1,16 @@
-import { Button, TextField, InputAdornment } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
-import SaveIcon from '@mui/icons-material/Save';
-import AddIcon from '@mui/icons-material/Add';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import MenuIcon from '@mui/icons-material/Menu';
-import { Dialog } from "@mui/material";
-import { DialogActions } from "@mui/material";
-import { DialogContent } from "@mui/material";
-import { DialogContentText } from "@mui/material";
-import { DialogTitle } from "@mui/material";
+import { Button, TextField, InputAdornment } from "@mui/material"
+import DeleteIcon from '@mui/icons-material/Delete'
+import SaveIcon from '@mui/icons-material/Save'
+import AddIcon from '@mui/icons-material/Add'
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'
+import MenuIcon from '@mui/icons-material/Menu'
+import { Dialog } from "@mui/material"
+import { DialogActions } from "@mui/material"
+import { DialogContent } from "@mui/material"
+import { DialogContentText } from "@mui/material"
+import { DialogTitle } from "@mui/material"
 import './Notes.css'
-import { useRef, useState } from "react";
+import { useRef, useState } from "react"
 
 /** Declare variables **/
 let notes = [], selectedNote = null, lastId = 0, showSidebar = window.matchMedia("(max-width: 1000px)").matches ? false : true, touchstartX = 0, touchendX = 0, tempTitle = "", tempText = "", dialogType = null, tempTarget = null
@@ -24,7 +24,7 @@ const Notes = () => {
     const search = useRef(null), seachNoResults = useRef(null)
     const mobileInfoScreen = useRef(null)
     const timestamp = useRef(null)
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(false)
 
     /** Mobile only function to close the sidebar on click outside of it **/
     const handleNoteFocus = () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
@@ -43,14 +43,7 @@ const Notes = () => {
     /** Button event handling **/
     const handleSave = () => { save() }
     const handleAdd = () => { checkForChanges() }
-    const handleDelete = () => {
-        if (selectedNote) {
-            notes.splice(notes.indexOf(selectedNote), 1)
-            let note = document.getElementsByClassName(`note-${selectedNote.id}`)[0]
-            note.remove()
-            reset()
-        }
-    }
+    const handleDelete = () => { if (selectedNote) ( setOpen(true), dialogType = "delete" ) }
 
     /** Checks if there are unsaved changes in a note **/
     const checkForChanges = () => {
@@ -62,9 +55,16 @@ const Notes = () => {
     /** Handle Close Dialog Events **/
     const handleClose = (value) => {
         let val = value.target.value.split(" ")[1], type = value.target.value.split(" ")[0]
+        console.log(val, type)
         if (val == "false"){ setOpen(false) }
         else{
             if (type == "add"){ (reset(), focusOnName(), tempTitle = "", tempText = "" ) }
+            else if (type == "delete"){ 
+                notes.splice(notes.indexOf(selectedNote), 1)
+                let note = document.getElementsByClassName(`note-${selectedNote.id}`)[0]
+                note.remove()
+                reset()
+            }
             else {
                 if (tempTarget.tagName === 'LI' && !tempTarget.classList.contains("selected")) {
                     let li = tempTarget, index = li.className[li.className.length - 1]
@@ -102,7 +102,7 @@ const Notes = () => {
         if (window.matchMedia("(max-width: 1000px)").matches) sidebarHide()
 
         if (noteName.current.value != tempTitle || noteInput.current.value != tempText){
-            setOpen(true);
+            setOpen(true)
             dialogType = "select"
             tempTarget = event.target
         }
@@ -262,7 +262,6 @@ const Notes = () => {
                     id="delete" 
                     title="Delete note" 
                     className="Mui-disabled"
-                    disabled={selectedNote!=undefined} 
                     ref={deleteBtn} 
                     onClick={handleDelete}>
                         <DeleteIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
@@ -330,7 +329,7 @@ const Notes = () => {
       <Dialog
         open={open}
         aria-labelledby="responsive-dialog-title">
-            <DialogTitle id="responsive-dialog-title">{"You have unsaved changes!"}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">{dialogType == "delete" ? "You are about to delete a note!" : "You have unsaved changes!"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     Are you sure you want to proceed?
