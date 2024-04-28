@@ -4,13 +4,18 @@ import SaveIcon from '@mui/icons-material/Save';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import MenuIcon from '@mui/icons-material/Menu';
+import { Dialog } from "@mui/material";
+import { DialogActions } from "@mui/material";
+import { DialogContent } from "@mui/material";
+import { DialogContentText } from "@mui/material";
+import { DialogTitle } from "@mui/material";
 import './Notes.css'
-import { useRef } from "react";
+import { useRef, useState } from "react";
+
+/** Declare variables **/
+let notes = [], selectedNote = null, lastId = 0, showSidebar = window.matchMedia("(max-width: 1000px)").matches ? false : true, touchstartX = 0, touchendX = 0, tempTitle = "", tempText = "", dialogType = null, tempTarget = null
 
 const Notes = () => {
-    /** Declare variables **/
-    let notes = [], selectedNote = null, lastId = 0, showSidebar = window.matchMedia("(max-width: 1000px)").matches ? false : true, touchstartX = 0, touchendX = 0
-
     /** Declare constants **/
     const container = useRef(null), header = useRef(null)
     const toggle = useRef(null)
@@ -19,6 +24,7 @@ const Notes = () => {
     const search = useRef(null), seachNoResults = useRef(null)
     const mobileInfoScreen = useRef(null)
     const timestamp = useRef(null)
+    const [open, setOpen] = useState(false);
 
     /** Mobile only function to close the sidebar on click outside of it **/
     const handleNoteFocus = () => { if (showSidebar && window.matchMedia("(max-width: 1000px)").matches) sidebarHide() }
@@ -36,13 +42,50 @@ const Notes = () => {
 
     /** Button event handling **/
     const handleSave = () => { save() }
-    const handleAdd = () => { reset(), focusOnName() }
+    const handleAdd = () => { checkForChanges() }
     const handleDelete = () => {
         if (selectedNote) {
             notes.splice(notes.indexOf(selectedNote), 1)
             let note = document.getElementsByClassName(`note-${selectedNote.id}`)[0]
             note.remove()
             reset()
+        }
+    }
+
+    /** Checks if there are unsaved changes in a note **/
+    const checkForChanges = () => {
+        noteName.current.value != tempTitle || noteInput.current.value != tempText 
+            ? (setOpen(true), dialogType = "add")
+            : (reset(), focusOnName(), tempTitle = "", tempText = "" )
+    }
+
+    /** Handle Close Dialog Events **/
+    const handleClose = (value) => {
+        let val = value.target.value.split(" ")[1], type = value.target.value.split(" ")[0]
+        if (val == "false"){ setOpen(false) }
+        else{
+            if (type == "add"){ (reset(), focusOnName(), tempTitle = "", tempText = "" ) }
+            else {
+                if (tempTarget.tagName === 'LI' && !tempTarget.classList.contains("selected")) {
+                    let li = tempTarget, index = li.className[li.className.length - 1]
+                    selectedNote = notes.filter(note => note.id === +index)[0]
+                    deselectNotes()
+                    tempTarget.classList.add('selected')
+                    noteInput.current.value = selectedNote.text
+                    noteName.current.value = selectedNote.title
+                    tempText = selectedNote.text
+                    tempTitle = selectedNote.title
+                    timestamp.current.innerText = selectedNote.timestamp
+                    timestamp.current.classList.add("active")
+                    focusOnName()
+                    enableSaveBtn()
+                    enableAddBtn()
+                    enableDeleteBtn()
+                }
+            }
+            setOpen(false)
+            dialogType = null
+            tempTarget = null
         }
     }
 
@@ -58,14 +101,20 @@ const Notes = () => {
     const handleSelect = (event) => {
         if (window.matchMedia("(max-width: 1000px)").matches) sidebarHide()
 
-        if (event.target.tagName === 'LI' && !event.target.classList.contains("selected")) {
-            let li = event.target
-            let index = li.className[li.className.length - 1]
+        if (noteName.current.value != tempTitle || noteInput.current.value != tempText){
+            setOpen(true);
+            dialogType = "select"
+            tempTarget = event.target
+        }
+        else if (event.target.tagName === 'LI' && !event.target.classList.contains("selected")) {
+            let li = event.target, index = li.className[li.className.length - 1]
             selectedNote = notes.filter(note => note.id === +index)[0]
             deselectNotes()
             event.target.classList.add('selected')
             noteInput.current.value = selectedNote.text
             noteName.current.value = selectedNote.title
+            tempText = selectedNote.text
+            tempTitle = selectedNote.title
             timestamp.current.innerText = selectedNote.timestamp
             timestamp.current.classList.add("active")
             focusOnName()
@@ -92,11 +141,14 @@ const Notes = () => {
 
     /** Saves the new note when both the title and the textarea have at least one symbol and return to default state (Add new note) **/
     const save = () => {
+        tempTitle = ""
+        tempText = ""
         if (noteInput.current.value.length > 0 && noteName.current.value.length > 0) {
             mobileInfoScreen.current.classList.add("active")
             setTimeout(() => { mobileInfoScreen.current.classList.remove("active") }, 1000)
             let now = new Date()
-            let date = now.getDate().toString() + "/" + now.getMonth().toString() + "/" + now.getFullYear().toString() + " " + now.getHours().toString() + ":" + now.getMinutes().toString() 
+            let date = now.getDate().toString() + "/" + now.getMonth().toString() + "/" + now.getFullYear().toString() + " " 
+                        + now.getHours().toString() + ":" + now.getMinutes().toString() 
             let newNote = { id: lastId, text: noteInput.current.value, title: noteName.current.value, timestamp: date }
             let li
             if (selectedNote == null){
@@ -152,8 +204,7 @@ const Notes = () => {
         if (el != undefined){
             el.focus()
             if (typeof el.selectionStart == "number" && typeof el.selectionEnd == "number") {
-                let val = el.value
-                let selStart = el.selectionStart
+                let val = el.value, selStart = el.selectionStart
                 el.value = val.slice(0, selStart) + text + val.slice(el.selectionEnd)
                 el.selectionEnd = el.selectionStart = selStart + text.length
             } else if (typeof document.selection != "undefined") {
@@ -211,7 +262,7 @@ const Notes = () => {
                     id="delete" 
                     title="Delete note" 
                     className="Mui-disabled"
-                    disabled={selectedNote} 
+                    disabled={selectedNote!=undefined} 
                     ref={deleteBtn} 
                     onClick={handleDelete}>
                         <DeleteIcon fontSize={(window.matchMedia("(max-width: 700px)").matches && window.matchMedia("(orientation: portrait)").matches ? "large" : "small")}/>
@@ -276,6 +327,24 @@ const Notes = () => {
             <div id="timestamp" ref={timestamp}></div>
         </main>
       </div>
+      <Dialog
+        open={open}
+        aria-labelledby="responsive-dialog-title">
+            <DialogTitle id="responsive-dialog-title">{"You have unsaved changes!"}</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Are you sure you want to proceed?
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button autoFocus color="primary" onClick={handleClose} value={dialogType + " false"}>
+                    No
+                </Button>
+                <Button color="primary" autoFocus onClick={handleClose} value={dialogType + " true"}>
+                    Yes
+                </Button>
+            </DialogActions>
+      </Dialog>
       
     </>
   )
