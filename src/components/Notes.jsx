@@ -178,8 +178,10 @@ const Notes = () => {
             tempText = noteInput.current.value
             tempTitle = noteName.current.value
             disableSaveBtn()
-            timestamp.current.innerText = selectedNote.timestamp
-            timestamp.current.classList.add("active")
+            if (selectedNote){
+                timestamp.current.innerText = selectedNote.timestamp
+                timestamp.current.classList.add("active")
+            }
         }
     }
 
